@@ -1,6 +1,6 @@
 import CBook
 import CBorrower
-#import CTransaction
+import CTransaction
 
 
 
@@ -17,7 +17,7 @@ def adminPortal():
             bookMenu()
         elif choice == "2":
             print("MANAGE BORROWING RECORD")
-            #transactionMenu()
+            transactionMenu()
         elif choice == "3":
             print("MANAGE BORROWER RECORD")
             borrowerMenu()
@@ -43,7 +43,7 @@ def studentPortal():
             CBook.searchBook()
         elif choice == "3":
             pass
-            #transaction.getInfoTransaction()
+            CTransaction.getInfoTransaction()
             #transaction.saveTransaction()
         elif choice == "4":
             CBorrower.changePass()
@@ -100,6 +100,26 @@ def borrowerMenu():
         elif choice == "3":
             CBorrower.updateBorrower()
 
+        elif choice == "4":
+            return
+        else:
+            print("Invalid choice. Please try again.")
+
+def transactionMenu():
+    while True:
+        print("[1] UPDATE")
+        print("[2] SEARCH")
+        print("[3] DISPLAY")
+        print("[4] BACK")
+        choice = input("Enter your choice: ")
+        if choice == "1":
+            # CTransaction.updateTransaction()
+            pass
+        elif choice == "2":
+            #CTransaction.searchTransaction()
+            pass
+        elif choice == "3":
+            CTransaction.displayTransaction()
         elif choice == "4":
             return
         else:
