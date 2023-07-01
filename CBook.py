@@ -117,6 +117,40 @@ def deleteBook():
     else:
         print("Book not found!")
 
+def searchBook():
+    print("Select an attribute for searching")
+    print("[1] Title")
+    print("[2] Author")
+    print("[3] Year Published")
+    print("[4] Material")
+    print("[5] Category")
+    choice = int(input("Enter search category: "))
+
+    keyword = input("Enter the search keyword or substring: ")
+
+    foundMatch = False
+    for book in bookList:
+        attributeValue = ""
+        if choice == 1:
+            attributeValue = book.title
+        elif choice == 2:
+            attributeValue = book.author
+        elif choice == 3:
+            attributeValue = book.yearPublished
+        elif choice == 4:
+            attributeValue = book.material
+        elif choice == 5:
+            attributeValue = book.category
+        else:
+            attributeValue = book.title
+
+        if keyword.lower() in attributeValue.lower():
+            print(book.title +" "+ book.author +" "+ book.ISBN +" "+ book.edition +" "+ book.yearPublished +" "+ book.material +" "+ book.category +" "+ str(book.shelfNo) +" "+ str(book.totalStocks) +" "+ str(book.noOfBorrower))
+            foundMatch = True
+
+    if not foundMatch:
+        messagebox.showinfo("SEARCH BOOK", "NO MATCH FOUND ")
+
 
 def locateBook(ISBN):
     for i in range(len(bookList)):      #loop through the bookList

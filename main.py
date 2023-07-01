@@ -40,7 +40,7 @@ def studentPortal():
             CBook.displayBooks()
         elif choice == "2":
             pass
-            #book.searchBook()
+            CBook.searchBook()
         elif choice == "3":
             pass
             #transaction.getInfoTransaction()
@@ -76,7 +76,7 @@ def bookMenu():
             CBook.deleteBook()
             pass
         elif choice == "5":
-            #book.searchBook()
+            CBook.searchBook()
             pass
         elif choice == "6":
             return
@@ -110,6 +110,7 @@ def borrowerMenu():
 
 CBook.retrieveBook()
 CBorrower.retrieveBorrower()
+#CTransaction.retrieveTransaction()
 
 while True:
     print("MAIN SCREEN")

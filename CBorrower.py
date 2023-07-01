@@ -1,5 +1,4 @@
 import csv
-
 from tkinter import messagebox
 
 borrowerList = []     #Initializing an empty list of Cborrower objects          datasruct: list
@@ -230,6 +229,8 @@ def searchBorrower():
             attributeValue = borrower.contactNum
         elif choice == 5:
             attributeValue = borrower.email
+        else:
+            attributeValue = borrower.TUP_ID
 
         if keyword.lower() in attributeValue.lower():
             print(borrower.name, "\t", borrower.TUP_ID, "\t", borrower.yearSection, "\t", borrower.contactNum, "\t", borrower.email)
