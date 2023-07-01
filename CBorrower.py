@@ -3,11 +3,11 @@ import csv
 from tkinter import messagebox
 
 borrowerList = []     #Initializing an empty list of Cborrower objects          datasruct: list
-loggedInAccount = 0
+loggedInAccount = 0     #once na nakapag-log in, di na magpapa-enter uli ng TUP_ID, ito na yung index na gagamitin
 
 class CBorrower:
     # Object Constructor
-    def __init__(self, name, TUP_ID, password, yearSection, contactNum, email, noOfBorrowed, borrowedborrowers = []) :
+    def __init__(self, name, TUP_ID, password, yearSection, contactNum, email, noOfBorrowed, borrowedBook = []) :
         self.name = name
         self.TUP_ID = TUP_ID
         self.password = password
@@ -15,7 +15,7 @@ class CBorrower:
         self.contactNum = contactNum
         self.email = email
         self.noOfBorrowed = noOfBorrowed
-        self.borrowedborrowers = []
+        self.borrowedBook = []
 
     #lahat ng mga naka-indent dito ay kasama sa Cborrower Class
 
@@ -29,6 +29,7 @@ def getInfoBorrower():
     email = input("Enter your email: ")
     password = input("Enter your password: ")
     repassword = input("Re-enter password: ")
+    noOfBorrowed = 0
 
     if locateBorrower(TUP_ID) >= 0:               #if existing na sa borrowerList
         messagebox.showerror("REGISTRATION ", "YOUR TUP ID IS ALREADY REGISTERED")
@@ -46,10 +47,10 @@ def getInfoBorrower():
 
         )
         if response:                        #if yes
-            borrower = CBorrower(name, TUP_ID, password, yearSection, contactNum, email, noOfBorrowed=0)
+            borrower = CBorrower(name, TUP_ID, password, yearSection, contactNum, email, noOfBorrowed)
             addBorrower(borrower)
+            saveBorrower()
             messagebox.showinfo("REGISTRATION", "YOUR ACCOUNT IS SUCCESSFULLY REGISTERED!")
-
 
 def addBorrower(borrower):
     # Find the index to insert the borrower alphabetically based on the name
@@ -77,12 +78,12 @@ def changePass():
         exit = False
 
         while tries > 0 and exit == False:
-            TUP_ID = input("Enter your TUP ID:")
+            #TUP_ID = input("Enter your TUP ID:")
             currentPass = input("Enter current password: ")
             newPass = input("Enter new password: ")
             reEnterPass = input("Re-enter new password: ")
 
-            index = locateBorrower(TUP_ID)
+            index = loggedInAccount
 
             if index < 0:
                 messagebox.showerror("CHANGE PASSWORD", "ACCOUNT NOT FOUND")
@@ -111,8 +112,8 @@ def changePass():
                 return
 
 def updateBorrower():
-    TUP_ID = input("ENTER TUP ID: ")
-    index = locateBorrower(TUP_ID)
+    #TUP_ID = input("ENTER TUP ID: ")
+    index = loggedInAccount
 
     if index >= 0:  # if existing ang STUDENT
         print("[1] NAME\n[2] TUP ID\n[3] YEAR AND SECTION\n[4]CONTACT NUMBER\n[5] EMAIL\n[6] CHANGE PASSWORD\n")
@@ -124,32 +125,29 @@ def updateBorrower():
         else:
             updatedInfo = input()
 
-        # INSERT ASK IF CONFIRM UPDATING
-
-        if attributeChoice == 1:
-            borrowerList[index].name = updatedInfo
-        elif attributeChoice == 2:
-            borrowerList[index].TUP_ID = updatedInfo
-        elif attributeChoice == 3:
-            borrowerList[index].yearSection = updatedInfo
-        elif attributeChoice == 4:
-            borrowerList[index].contactNum = updatedInfo
-        elif attributeChoice == 5:
-            borrowerList[index].email = updatedInfo
-        elif attributeChoice == 6:
-            changePass()
-
+        #CONFIRM UPDATE
         response = messagebox.askyesno(  # creates a yes or no message box
-                title="Confirmation",
-                message="ARE YOU SURE TO UPDATE THE INFORMATION?",
-                icon=messagebox.QUESTION
-            )
+            title="Confirmation",
+            message="ARE YOU SURE TO UPDATE THE INFORMATION?",
+            icon=messagebox.QUESTION
+        )
 
         if response:
+            if attributeChoice == 1:
+                borrowerList[index].name = updatedInfo
+            elif attributeChoice == 2:
+                borrowerList[index].TUP_ID = updatedInfo
+            elif attributeChoice == 3:
+                borrowerList[index].yearSection = updatedInfo
+            elif attributeChoice == 4:
+                borrowerList[index].contactNum = updatedInfo
+            elif attributeChoice == 5:
+                borrowerList[index].email = updatedInfo
+            elif attributeChoice == 6:
+                changePass()
+
             saveBorrower()
-            messagebox.showerror("UPDATE BORROWER INFORMATION ", "UPDATED SUCCESSFULLY!")
-        else:
-            return
+            messagebox.showinfo("UPDATE BORROWER INFORMATION ", "UPDATED SUCCESSFULLY!")
 
     else:
         print("STUDENT NOT FOUND!")
@@ -157,9 +155,9 @@ def updateBorrower():
 #login
 def logInBorrower():
     tries = 3
-    flag = 0
+    exit = False
 
-    while tries > 0 and flag == 0:
+    while tries > 0 and exit == False:
         print("LOG IN STUDENT")
         enteredID = input("TUP ID (Ex. 123456): TUP-M ")
         enteredPass = input("PASSWORD: ")
@@ -168,34 +166,34 @@ def logInBorrower():
 
         if index >= 0 and enteredPass == borrowerList[index].password:
             print("LOG IN SUCCESSFULLY!")
-            flag = 1
+            exit = True
             saveBorrower()
-            # loggedInIndex = index
+            global loggedInAccount      #accessing global variable
+            loggedInAccount = index     #modifying global variable
+            exit = True
+
         else:
             print("INCORRECT TUP ID OR PASSWORD")
             tries -= 1
             print("YOU HAVE", tries, "TRIES LEFT.")
             print()
 
-    if tries == 0:
-        print("YOU HAVE EXCEEDED THE MAXIMUM NUMBER OF TRIES.")
-        print()
-
-    return flag
-
+        if tries == 0:
+            print("YOU HAVE EXCEEDED THE MAXIMUM NUMBER OF TRIES.")
+            exit = True
 
 def logInAdmin():
     tries = 3
-    flag = 0
+    exit = False
 
-    while tries > 0 and flag == 0:
+    while tries > 0 and exit == False:
         print("LOG IN ADMIN")
         enteredUsername = input("Username: ")
         enteredPass = input("PASSWORD: ")
 
         if enteredUsername == "ADMIN" and enteredPass == "1234":
             print("LOG IN SUCCESSFULLY!")
-            flag = 1
+            exit = True
             # PUNTA SA STUDENT PORTAL
             # loggedInIndex = index
         else:
@@ -204,11 +202,9 @@ def logInAdmin():
             print("YOU HAVE", tries, "TRIES LEFT.")
             print()
 
-    if tries == 0:
-        print("YOU HAVE EXCEEDED THE MAXIMUM NUMBER OF TRIES.")
-        print()
-
-    return flag
+        if tries == 0:
+            print("YOU HAVE EXCEEDED THE MAXIMUM NUMBER OF TRIES.")
+            exit = True
 
 def searchBorrower():
     print("Select an attribute for searching")
@@ -225,22 +221,22 @@ def searchBorrower():
     for borrower in borrowerList:
         attributeValue = ""
         if choice == 1:
-            attributeValue = borrower.name()
+            attributeValue = borrower.name
         elif choice == 2:
-            attributeValue = borrower.TUP_ID()
+            attributeValue = borrower.TUP_ID
         elif choice == 3:
-            attributeValue = borrower.yearSection()
+            attributeValue = borrower.yearSection
         elif choice == 4:
-            attributeValue = borrower.contactNum()
+            attributeValue = borrower.contactNum
         elif choice == 5:
-            attributeValue = borrower.email()
+            attributeValue = borrower.email
 
         if keyword.lower() in attributeValue.lower():
-            print(borrower.name(), "\t", borrower.TUP_ID(), "\t", borrower.yearSection(), "\t", borrower.contactNum(), "\t", borrower.email())
+            print(borrower.name, "\t", borrower.TUP_ID, "\t", borrower.yearSection, "\t", borrower.contactNum, "\t", borrower.email)
             foundMatch = True
 
     if not foundMatch:
-        print("NO MATCHING BORROWERS FOUND.")
+        messagebox.showinfo("SEARCH BORROWER", "NO MATCH FOUND ")
 
 def saveBorrower():
     filename = "borrowerRecords.csv"  # Specify the filename for the CSV file
@@ -273,9 +269,8 @@ def retrieveBorrower():
             noOfBorrowed = row [6]
             #borrowedborrowers [0] = row[6]
 
-
             #create an object of the retrieved borrower
-            borrower = CBorrower(name, TUP_ID, password, yearSection, contactNum, email, noOfBorrowed=0)#noOfBorrowed,  borrowedborrowers
+            borrower = CBorrower(name, TUP_ID, password, yearSection, contactNum, email, noOfBorrowed)# borrowedBook
             #add borrower in the borrowerList
             addBorrower(borrower)
 

@@ -127,7 +127,7 @@ while True:
             studentPortal()
         elif logInOrRegister == "2":
             CBorrower.getInfoBorrower()
-           # studentPortal()
+            studentPortal()
         else:
             print("INVALID CHOICE")
     elif choice == "2":
