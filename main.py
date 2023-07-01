@@ -2,6 +2,8 @@ import CBook
 import CBorrower
 #import CTransaction
 
+
+
 def adminPortal():
     while True:
         print("ADMIN PORTAL")
@@ -32,7 +34,7 @@ def studentPortal():
         print("[3] BORROW BOOK")
         print("[4] CHANGE PASSWORD")
         print("[5] BACK")
-        choice = (input("Enter your choice: "))
+        choice = input("Enter your choice: ")
 
         if choice == "1":
             CBook.displayBooks()
@@ -43,7 +45,10 @@ def studentPortal():
             pass
             #transaction.getInfoTransaction()
             #transaction.saveTransaction()
-        elif choice == 5:
+        elif choice == "4":
+            CBorrower.changePass()
+
+        elif choice == "5":
             return
         else:
             print("Invalid choice. Please try again.")
@@ -78,9 +83,33 @@ def bookMenu():
         else:
             print("Invalid choice. Please try again.")
 
+
+def borrowerMenu():
+    while True:
+        print("[1] DISPLAY BORROWER")
+        print("[2] SEARCH BORROWER")
+        print("[3] UPDATE BORROWER")
+        print("[4] BACK")
+        choice = input("Enter your choice: ")
+        if choice == "1":
+            CBorrower.displayBorrower()
+
+        elif choice == "2":
+           CBorrower.searchBorrower()
+
+        elif choice == "3":
+            CBorrower.updateBorrower()
+
+        elif choice == "4":
+            return
+        else:
+            print("Invalid choice. Please try again.")
+
+
 #MAIN
 
 CBook.retrieveBook()
+CBorrower.retrieveBorrower()
 
 while True:
     print("MAIN SCREEN")
@@ -93,8 +122,17 @@ while True:
         print("[1] LOG IN")
         print("[2] REGISTER")
         logInOrRegister = input("ENTER CHOICE: ")
+        if logInOrRegister == "1":
+            CBorrower.logInBorrower()
+            studentPortal()
+        elif logInOrRegister == "2":
+            CBorrower.getInfoBorrower()
+           # studentPortal()
+        else:
+            print("INVALID CHOICE")
     elif choice == "2":
         print()
+        CBorrower.logInAdmin()
         adminPortal()
     elif choice == "3":
         pass    #walang gagawin
