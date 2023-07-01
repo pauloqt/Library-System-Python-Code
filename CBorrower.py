@@ -97,7 +97,7 @@ def changePass():
         else:
             print("CHANGE PASSWORD SUCCESSFULLY!")
             flag = 1
-            saveBorrower()
+
 
         if tries == 0:
             print("YOU HAVE EXCEEDED THE MAXIMUM NUMBER OF TRIES.")

@@ -20,7 +20,7 @@ def adminPortal():
             #transactionMenu()
         elif choice == "3":
             print("MANAGE BORROWER RECORD")
-            #borrowerMenu()
+            borrowerMenu()
         elif choice == "4":
             return
         else:
