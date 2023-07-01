@@ -3,6 +3,7 @@ import csv
 from tkinter import messagebox
 
 borrowerList = []     #Initializing an empty list of Cborrower objects          datasruct: list
+loggedInAccount = 0
 
 class CBorrower:
     # Object Constructor
@@ -20,28 +21,34 @@ class CBorrower:
 
 #######################  METHODS   ##############################################
 def getInfoBorrower():
-    name = input("Enter your name: ")
+    print("ENTER COMPLETE INFORMATION BELOW")
     TUP_ID = input("Enter your TUP_ID: ")
-    password = input("Enter your password: ")
+    name = input("Enter your name: ")
     yearSection = input("Enter your Year and Section: ")
     contactNum = input("Enter your contact number: ")
     email = input("Enter your email: ")
+    password = input("Enter your password: ")
+    repassword = input("Re-enter password: ")
 
     if locateBorrower(TUP_ID) >= 0:               #if existing na sa borrowerList
-        messagebox.showerror("REGISTRATION ", "THE STUDENT ALREADY EXISTS IN THE RECORD")
+        messagebox.showerror("REGISTRATION ", "YOUR TUP ID IS ALREADY REGISTERED")
     elif not checkBorrowerFields(name, TUP_ID, password, yearSection, contactNum, email):    #if di complete fields
         messagebox.showerror("REGISTRATION", "PLEASE FILL IN ALL THE FIELDS")
+    elif len(TUP_ID) != 6:
+        messagebox.showerror("REGISTRATION", "TUP ID MUST BE 6 DIGITS LONG")
+    elif password != repassword:
+        messagebox.showerror("REGISTRATION", "PASSWORD DIDN'T MATCH")
     else:
         response = messagebox.askyesno(    #creates a yes or no message box
             title="Confirmation",
-            message="DO YOU WANT TO PROCEED?",
+            message="DO YOU WANT TO SUBMIT YOUR REGISTRATION?",
             icon=messagebox.QUESTION
 
         )
         if response:                        #if yes
             borrower = CBorrower(name, TUP_ID, password, yearSection, contactNum, email, noOfBorrowed=0)
             addBorrower(borrower)
-
+            messagebox.showinfo("REGISTRATION", "YOUR ACCOUNT IS SUCCESSFULLY REGISTERED!")
 
 
 def addBorrower(borrower):
@@ -66,44 +73,42 @@ def displayBorrower():
 
 
 def changePass():
-        index = 0
         tries = 3
-        flag = 0
+        exit = False
 
-        while tries > 0:
-            currPass = input("Enter your old password: ")
+        while tries > 0 and exit == False:
+            TUP_ID = input("Enter your TUP ID:")
+            currentPass = input("Enter current password: ")
+            newPass = input("Enter new password: ")
+            reEnterPass = input("Re-enter new password: ")
 
-            if borrowerList[index].password != currPass:  # if password doesn't match the current password
-                print("PASSWORD DIDN'T MATCH!")
-                tries -= 1
-                print("YOU HAVE", tries, "TRIES LEFT.")
-                print()
+            index = locateBorrower(TUP_ID)
+
+            if index < 0:
+                messagebox.showerror("CHANGE PASSWORD", "ACCOUNT NOT FOUND")
+            elif currentPass != borrowerList[index].password:
+                messagebox.showerror("CHANGE PASSWORD", "INCORRECT CURRENT PASSWORD")
+                tries-=1
+            elif newPass != reEnterPass:
+                messagebox.showerror("CHANGE PASSWORD", "NEW PASSWORD DOESN'T MATCH THE RE-ENTERED PASSWORD!")
+            elif currentPass == newPass:
+                messagebox.showerror("CHANGE PASSWORD", "YOU CAN'T CHANGE IT TO YOUR CURRENT PASSWORD")
             else:
-                break
+                response = messagebox.askyesno(  # creates a yes or no message box
+                    title="Confirmation",
+                    message="CONFIRM CHANGES?",
+                    icon=messagebox.QUESTION
+                )
+                if response:
+                    borrowerList[index].password = newPass      #set password to new pass
+                    saveBorrower()
+                    messagebox.showinfo("CHANGE PASSWORD", "YOUR PASSWORD HAS BEEN SUCCESSFULLY CHANGED!")
+                    exit = True
 
-        if tries == 0:
-            print("YOU HAVE EXCEEDED THE MAXIMUM NUMBER OF TRIES.")
-            print()
-            return flag
-
-        newPass = input("Enter your new password: ")
-        rePass = input("Re-enter your new password: ")
-
-        if rePass != newPass:  # if the re-entered password doesn't match the new password
-            print("PASSWORD DIDN'T MATCH!")
-            tries -= 1
-            print("YOU HAVE", tries, "TRIES LEFT.")
-            print()
-        else:
-            print("CHANGE PASSWORD SUCCESSFULLY!")
-            flag = 1
-
-
-        if tries == 0:
-            print("YOU HAVE EXCEEDED THE MAXIMUM NUMBER OF TRIES.")
-            print()
-
-        return flag
+            if tries == 0:
+                print("YOU HAVE EXCEEDED THE MAXIMUM NUMBER OF TRIES.")
+                isBlocked = True
+                return
 
 def updateBorrower():
     TUP_ID = input("ENTER TUP ID: ")
