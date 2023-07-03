@@ -170,7 +170,7 @@ def saveBook():
 
         # Write each book's data row
         for book in bookList:
-            writer.writerow([book.title, book.author, book.ISBN, book.edition, book.yearPublished, book.material, book.cry, book.shelfNo, book.totalStocks, book.noOfBorrower])
+            writer.writerow([book.title, book.author, book.ISBN, book.edition, book.yearPublished, book.material, book.category, book.shelfNo, book.totalStocks, book.noOfBorrower])
 
 def retrieveBook():
 

@@ -44,7 +44,7 @@ def studentPortal():
         elif choice == "3":
             pass
             CTransaction.getInfoTransaction()
-            #transaction.saveTransaction()
+            CTransaction.saveTransaction()
         elif choice == "4":
             CBorrower.changePass()
 
@@ -113,10 +113,10 @@ def transactionMenu():
         print("[4] BACK")
         choice = input("Enter your choice: ")
         if choice == "1":
-            # CTransaction.updateTransaction()
+            CTransaction.updateTransaction()
             pass
         elif choice == "2":
-            #CTransaction.searchTransaction()
+            CTransaction.searchTransaction()
             pass
         elif choice == "3":
             CTransaction.displayTransaction()
@@ -130,7 +130,7 @@ def transactionMenu():
 
 CBook.retrieveBook()
 CBorrower.retrieveBorrower()
-#CTransaction.retrieveTransaction()
+CTransaction.retrieveTransaction()
 
 while True:
     print("MAIN SCREEN")
