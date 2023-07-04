@@ -1,4 +1,5 @@
 import csv
+import random
 from tkinter import messagebox
 from CBorrower import borrowerList
 from CBook import bookList
@@ -27,6 +28,7 @@ class CTransaction:
     #lahat ng mga naka-indent dito ay kasama sa CTransaction Class
 
 #######################  METHODS   ##############################################
+""""
 def getInfoTransaction():
     print("ENTER COMPLETE INFORMATION BELOW")
     loggedInAccount= CBorrower.loggedInAccount      #Stores the index of loggedInAccount
@@ -68,6 +70,121 @@ def addTransaction(transaction):
     transactionList.insert(index, transaction)
     #Note: Pakitawag ang savetransaction() after mag-add ng transaction sa main.
 
+"""
+
+import tkinter as tk
+from tkinter import messagebox
+
+def getInfoTransaction():
+    root = tk.Tk()
+
+    # Create main frame
+    main_frame = tk.Frame(root)
+    main_frame.pack(padx=10, pady=10)
+
+    # Create labels and entry fields
+    tk.Label(main_frame, text="\t\t\t\tENTER COMPLETE INFORMATION BELOW\t\t\t\t").grid(row=0, columnspan=2)
+
+    ISBN = input("ENTER ISBN: ")
+    indexBook = CBook.locateBook(ISBN)                #kinuha index ng book na hihiramin
+    title = bookList[indexBook].title
+    author = bookList[indexBook].author
+
+    indexBorrower = CBorrower.loggedInAccount        #kinuha index ng currently account logged in.
+    TUP_ID = borrowerList[loggedInAccount].TUP_ID
+    borrower = borrowerList[loggedInAccount].name
+    yearSection = borrowerList[loggedInAccount].yearSection
+
+    # Create and pack the label for TUP ID
+    TUP_ID_label = tk.Label(root, text="TUP ID:")
+    TUP_ID_label.pack(padx=10, pady=10)
+    # Create and pack the non-editable entry field for TUP ID
+    TUP_ID_entry = tk.Entry(root, state="normal")  # set to editable
+    TUP_ID_entry.insert(tk.END, TUP_ID)  # Insert the actual value
+    TUP_ID_entry.pack(padx=10)
+    TUP_ID_entry.config(state="disabled")  # Disable the entry field
+
+    # Create and pack the label for NAME
+    borrowerlabel = tk.Label(root, text="NAME:")
+    borrowerlabel.pack(padx=10, pady=10)
+    # Create and pack the non-editable entry field for YEAR AND SECTION
+    borrowerentry = tk.Entry(root, state="normal")  # set to editable
+    borrowerentry.insert(tk.END, borrower)  # Insert the actual value
+    borrowerentry.pack(padx=10)
+    borrowerentry.config(state="disabled")  # Disable the entry field
+
+    # Create and pack the label for YEAR AND SECTION
+    yearSection_label = tk.Label(root, text="YEAR AND SECTION:")
+    yearSection_label.pack(padx=10, pady=10)
+    # Create and pack the non-editable entry field for YEAR AND SECTION
+    yearSection_entry = tk.Entry(root, state="normal")  # set to editable
+    yearSection_entry.insert(tk.END, yearSection)  # Insert the actual value
+    yearSection_entry.pack(padx=10)
+    yearSection_entry.config(state="disabled")  # Disable the entry field
+
+    # Create and pack the label for TITLE
+    title_label = tk.Label(root, text="TITLE:")
+    title_label.pack(padx=10, pady=10)
+    # Create and pack the non-editable entry field for YEAR AND SECTION
+    title_entry = tk.Entry(root, state="normal")  # set to editable
+    title_entry.insert(tk.END, title)  # Insert the actual value
+    title_entry.pack(padx=10)
+    title_entry.config(state="disabled")  # Disable the entry field
+
+    # Create and pack the label for DATE BORROWED
+    dateBorrowed_label = tk.Label(root, text="DATE BORROWED:")
+    dateBorrowed_label.pack(padx=10, pady=10)
+    # Create and pack the editable entry field for DATE BORROWED
+    dateBorrowed_entry = tk.Entry(root, state="normal")  # set to editable
+    dateBorrowed_entry.pack(padx=10)
+
+    # Create and pack the label for DATE TO RETURN
+    dateToReturn_label = tk.Label(root, text="DATE BORROWED:")
+    dateToReturn_label.pack(padx=10, pady=10)
+    # Create and pack the editable entry field for DATE BORROWED
+    dateToReturn_entry = tk.Entry(root, state="normal")  # set to editable
+    dateToReturn_entry.pack(padx=10)
+
+    def submit():
+        # Get values from other entry fields
+        dateBorrowed = dateBorrowed_entry.get()
+        dateToReturn = dateToReturn_entry.get()
+        librarian = "MS. LAICA YGOT"
+        refNum = generateReferenceNumber()
+        status = "TO APPROVE"
+        fine = "0"
+
+        # ERRORS AND CONFIRMATION ...
+
+        if indexBook < 0:
+            messagebox.showerror("BORROW BOOK", "BOOK DOES NOT EXIST")
+        elif borrowerList[loggedInAccount].noOfBorrowed == 3:
+            messagebox.showerror("BORROW BOOK", "YOU CAN ONLY BORROW MAXIMUM OF 3 BOOKS")
+        else:
+            response = messagebox.askyesno(
+                title="Confirmation",
+                message="DO YOU WANT TO PROCEED BORROWING?",
+                icon=messagebox.QUESTION
+            )
+            if response:
+                transaction = CTransaction(title, ISBN, TUP_ID, dateBorrowed, dateToReturn, status, refNum, borrower, author, librarian, fine)
+                addTransaction(transaction)
+                saveTransaction()
+                messagebox.showinfo("BORROW BOOK", "TRANSACTION SUCCESSFULLY SUBMITTED. PROCEED TO THE LIBRARIAN TO APPROVE TRANSACTION")
+
+        root.destroy()  # Close the form after submitting
+
+    tk.Button(root, text="Submit", command=submit).pack()
+
+    root.mainloop()
+
+def addTransaction(transaction):
+    #Add each transaction at the beginning of the list
+    index = 0
+
+    # Insert the transaction at the determined index
+    transactionList.insert(index, transaction)
+    #Note: Pakitawag ang savetransaction() after mag-add ng transaction sa main.
 
 def locateTransaction(refNum):
                 for i in range(len(transactionList)):  # loop through the transactionList
@@ -209,6 +326,10 @@ def retrieveTransaction():
             transaction = CTransaction(title, ISBN, TUP_ID, dateBorrowed, dateToReturn, status, refNum, borrower, author, librarian, fine)
             #add transaction at the end of the transactionList
             transactionList.append(transaction)
+
+def generateReferenceNumber():
+    reference_number = random.randint(100000, 999999)
+    return str(reference_number)
 
 def checkTransactionFields(title, ISBN, TUP_ID, dateBorrowed, dateToReturn, status, refNum, borrower, author, librarian, fine):
 
