@@ -75,7 +75,7 @@ def addTransaction(transaction):
 import tkinter as tk
 from tkinter import messagebox
 
-def getInfoTransaction():
+def getInfoTransaction():   #borrow book
     root = tk.Tk()
 
     # Create main frame
@@ -145,6 +145,7 @@ def getInfoTransaction():
     dateToReturn_entry = tk.Entry(root, state="normal")  # set to editable
     dateToReturn_entry.pack(padx=10)
 
+    #if pinindot submit
     def submit():
         # Get values from other entry fields
         dateBorrowed = dateBorrowed_entry.get()

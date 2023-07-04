@@ -164,21 +164,26 @@ def logInBorrower():
         index = locateBorrower(enteredID)
 
         if index >= 0 and enteredPass == borrowerList[index].password:
-            print("LOG IN SUCCESSFULLY!")
-            exit = True
+            messagebox.showinfo("LOG IN ", "LOG IN SUCCESSFULLY!")
             saveBorrower()
             global loggedInAccount      #accessing global variable
             loggedInAccount = index     #modifying global variable
             exit = True
 
+        elif enteredID == "ADMIN" and enteredPass == "1234":
+            messagebox.showinfo("LOG IN ", "LOG IN SUCCESSFULLY!")
+            exit = True
+
+        elif index <0:
+            messagebox.showerror("LOG IN", "YOUR TUP ID IS NOT YET REGISTERED")
+
         else:
-            print("INCORRECT TUP ID OR PASSWORD")
+            messagebox.showerror("LOG IN", "INCORRECT TUP ID OR PASSWORD")
             tries -= 1
             print("YOU HAVE", tries, "TRIES LEFT.")
-            print()
 
         if tries == 0:
-            print("YOU HAVE EXCEEDED THE MAXIMUM NUMBER OF TRIES.")
+            messagebox.showerror("LOG IN", "YOU HAVE REACHED THE MAXIMUM NUMBER OF ATTEMPTS.\nTRY AGAIN LATER")
             exit = True
 
 def logInAdmin():

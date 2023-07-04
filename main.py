@@ -144,7 +144,7 @@ while True:
         print("[2] REGISTER")
         logInOrRegister = input("ENTER CHOICE: ")
         if logInOrRegister == "1":
-            #CBorrower.logInBorrower()
+            CBorrower.logInBorrower()
             studentPortal()
         elif logInOrRegister == "2":
             CBorrower.getInfoBorrower()
