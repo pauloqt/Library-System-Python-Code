@@ -155,7 +155,6 @@ def getInfoTransaction():
     dateToReturn_entry = DateEntry(root, state="readonly")
     dateToReturn_entry.pack(padx=10)
 
-
     def submit():
         # Get values from other entry fields
         dateBorrowed = dateBorrowed_entry.get()
@@ -167,6 +166,7 @@ def getInfoTransaction():
 
         # ERRORS AND CONFIRMATION ...
         currentStock = int(bookList[indexBook].totalStocks) - int(bookList[indexBook].noOfBorrower)
+        remainingDays = str(calculateRemainingDays(dateToReturn))
 
         if indexBook < 0:
             messagebox.showerror("BORROW BOOK", "BOOK DOES NOT EXIST")
@@ -174,6 +174,8 @@ def getInfoTransaction():
             messagebox.showerror("BORROW BOOK", "BOOK SELECTED IS OUT OF STOCK")
         elif borrowerList[loggedInAccount].noOfBorrowed == 3:
             messagebox.showerror("BORROW BOOK", "YOU CAN ONLY BORROW MAXIMUM OF 3 BOOKS")
+        elif remainingDays >7:
+            messagebox.showerror("BORROW BOOK", "RETURN DATE MUST BE WITHIN 7 DAYS FROM THE DATE BORROWED")
         else:
             response = messagebox.askyesno(
                 title="Confirmation",
@@ -188,7 +190,6 @@ def getInfoTransaction():
                 CBook.saveBook()
                 borrowerList[indexBorrower].noOfBorrowed = int(borrowerList[indexBorrower].noOfBorrowed) + 1  # add noOfBorrowed if nanghiram
                 CBorrower.saveBorrower()
-                remainingDays = calculateRemainingDays(dateToReturn)
                 #INSERT SUMMARY OF TRANSACTION
                 messagebox.showinfo("BORROW BOOK", "TRANSACTION SUCCESSFULLY SUBMITTED. PROCEED TO THE LIBRARIAN TO APPROVE TRANSACTION")
                 root.destroy()  # Close the form after submitting
@@ -222,7 +223,8 @@ def locateTransaction(refNum):
 
 def displayTransaction():
     for transaction in transactionList:
-        print(transaction.title +" "+ transaction.ISBN +" "+ transaction.TUP_ID +" " + transaction.dateBorrowed + " " + transaction.dateToReturn +" "+ transaction.status +" "+ transaction.refNum +" "+ transaction.borrower +" "+ transaction.author +" "+ transaction.librarian +" "+ transaction.fine)
+        remainingDays = str(calculateRemainingDays(transaction.dateToReturn))
+        print(transaction.title +" "+ transaction.ISBN +" "+ transaction.TUP_ID +" " + transaction.dateBorrowed + " " + transaction.dateToReturn +" "+ transaction.status +" "+ transaction.refNum +" "+ transaction.borrower +" "+ transaction.author +" "+ transaction.librarian +" "+ transaction.fine +" "+ remainingDays)
 
 def updateTransaction():
     refNum = input("ENTER THE REFERENCE NUMBER OF THE TRANSACTION: ")

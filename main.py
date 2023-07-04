@@ -153,7 +153,7 @@ while True:
             print("INVALID CHOICE")
     elif choice == "2":
         print()
-        CBorrower.logInAdmin()
+        #CBorrower.logInAdmin()
         adminPortal()
     elif choice == "3":
         pass    #walang gagawin
