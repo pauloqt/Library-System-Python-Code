@@ -58,7 +58,9 @@ def addBook(book):
 
 def displayBooks():
     for book in bookList:
-        print(book.title +" "+ book.author +" "+ book.ISBN +" "+ book.edition +" "+ book.yearPublished +" "+ book.material +" "+ book.category +" "+ str(book.shelfNo) +" "+ str(book.totalStocks) +" "+ str(book.noOfBorrower))
+        currentStock = str(int(book.totalStocks) - int(book.noOfBorrower))
+        print(book.title +" "+ book.author +" "+ book.ISBN +" "+ book.edition +" "+ book.yearPublished +" "+ book.material +" "+ book.category +" "+ str(book.shelfNo) +" "+ str(book.totalStocks) +" "+ str(book.noOfBorrower) +" "+ currentStock)
+
 
 def updateBook():
     ISBN = input("ENTER THE ISBN OF THE BOOK: ")
@@ -145,7 +147,8 @@ def searchBook():
             attributeValue = book.title
 
         if keyword.lower() in attributeValue.lower():
-            print(book.title +" "+ book.author +" "+ book.ISBN +" "+ book.edition +" "+ book.yearPublished +" "+ book.material +" "+ book.category +" "+ str(book.shelfNo) +" "+ str(book.totalStocks) +" "+ str(book.noOfBorrower))
+            currentStock = str(int(book.totalStocks) - int(book.noOfBorrower))
+            print(book.title +" "+ book.author +" "+ book.ISBN +" "+ book.edition +" "+ book.yearPublished +" "+ book.material +" "+ book.category +" "+ str(book.shelfNo) +" "+ str(book.totalStocks) +" "+ str(book.noOfBorrower) +" "+ book.currentStock)
             foundMatch = True
 
     if not foundMatch:

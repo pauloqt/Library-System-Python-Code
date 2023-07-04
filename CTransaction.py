@@ -1,11 +1,11 @@
 import csv
 import random
-from tkinter import messagebox
-
-import pip
+import tkinter as tk
 import tkcalendar as tkcalendar
+from datetime import date
+from datetime import datetime, timedelta
 from tkcalendar import DateEntry
-
+from tkinter import messagebox
 from CBorrower import borrowerList
 from CBook import bookList
 from CBorrower import loggedInAccount
@@ -78,12 +78,6 @@ def addTransaction(transaction):
 
 """
 
-import tkinter as tk
-import tkcalendar as tkcalendar
-from datetime import date
-from tkcalendar import DateEntry
-from tkinter import messagebox
-
 indexBook = 0
 indexBorrower = 0
 def getInfoTransaction():
@@ -96,7 +90,6 @@ def getInfoTransaction():
     main_frame = tk.Frame(root)
     main_frame.pack(padx=10, pady=10)
     # Set the background color
-    root.configure(bg="LIGHT BLUE")
 
     borrower = borrowerList[loggedInAccount].name
     # Create labels and entry fields
@@ -124,16 +117,6 @@ def getInfoTransaction():
     TUP_ID_entry.pack(padx=10)
     TUP_ID_entry.config(state="disabled")  # Disable the entry field
 
-    """"
-    # Create and pack the label for NAME
-    borrowerlabel = tk.Label(root, text="NAME:")
-    borrowerlabel.pack(padx=10, pady=10)
-    # Create and pack the non-editable entry field for YEAR AND SECTION
-    borrowerentry = tk.Entry(root, state="normal")  # set to editable
-    borrowerentry.insert(tk.END, borrower)  # Insert the actual value
-    borrowerentry.pack(padx=10)
-    borrowerentry.config(state="disabled")  # Disable the entry field
-"""
     # Create and pack the label for YEAR AND SECTION
     yearSection_label = tk.Label(root, text="YEAR AND SECTION:")
     yearSection_label.pack(padx=10, pady=10)
@@ -184,11 +167,10 @@ def getInfoTransaction():
 
         # ERRORS AND CONFIRMATION ...
         currentStock = int(bookList[indexBook].totalStocks) - int(bookList[indexBook].noOfBorrower)
-        print(currentStock)
 
         if indexBook < 0:
             messagebox.showerror("BORROW BOOK", "BOOK DOES NOT EXIST")
-        elif currentStock == 0:
+        elif currentStock < 1:
             messagebox.showerror("BORROW BOOK", "BOOK SELECTED IS OUT OF STOCK")
         elif borrowerList[loggedInAccount].noOfBorrowed == 3:
             messagebox.showerror("BORROW BOOK", "YOU CAN ONLY BORROW MAXIMUM OF 3 BOOKS")
@@ -206,14 +188,22 @@ def getInfoTransaction():
                 CBook.saveBook()
                 borrowerList[indexBorrower].noOfBorrowed = int(borrowerList[indexBorrower].noOfBorrowed) + 1  # add noOfBorrowed if nanghiram
                 CBorrower.saveBorrower()
+                remainingDays = calculateRemainingDays(dateToReturn)
+                #INSERT SUMMARY OF TRANSACTION
                 messagebox.showinfo("BORROW BOOK", "TRANSACTION SUCCESSFULLY SUBMITTED. PROCEED TO THE LIBRARIAN TO APPROVE TRANSACTION")
-
-        root.destroy()  # Close the form after submitting
+                root.destroy()  # Close the form after submitting
 
     submit_button = tk.Button(root, text="Submit", command=submit)
     submit_button.pack(side="bottom", pady=20)  # Adjust the side and pady values as needed
 
     root.mainloop()
+
+def calculateRemainingDays(dateToReturn):
+    today = date.today()
+    dateToReturn = datetime.strptime(dateToReturn, "%m/%d/%y").date()
+
+    remaining_days = (dateToReturn - today).days
+    return remaining_days
 
 def addTransaction(transaction):
     #Add each transaction at the beginning of the list

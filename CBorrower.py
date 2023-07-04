@@ -164,7 +164,7 @@ def logInBorrower():
         index = locateBorrower(enteredID)
 
         if index >= 0 and enteredPass == borrowerList[index].password:
-            messagebox.showinfo("LOG IN ", "LOG IN SUCCESSFULLY!")
+            #messagebox.showinfo("LOG IN ", "LOG IN SUCCESSFULLY!")
             saveBorrower()
             global loggedInAccount      #accessing global variable
             loggedInAccount = index     #modifying global variable
