@@ -89,9 +89,12 @@ def getInfoTransaction():
     # Create main frame
     main_frame = tk.Frame(root)
     main_frame.pack(padx=10, pady=10)
-
+    borrower = borrowerList[loggedInAccount].name
     # Create labels and entry fields
-    tk.Label(main_frame, text="\t\t\t\tENTER COMPLETE INFORMATION BELOW\t\t\t\t").grid(row=0, columnspan=2)
+    tk.Label(main_frame, text="\t\t\t\tTUP READS\t\t\t\t").grid(row=0, columnspan=2)
+    tk.Label(main_frame, text="\t\t\t\tWELCOME TO TUP READS, {}\t\t\t\t".format(borrower)) \
+        .grid(row=1, columnspan=2)
+
 
     ISBN = input("ENTER ISBN: ")
     indexBook = CBook.locateBook(ISBN)                #kinuha index ng book na hihiramin
@@ -112,6 +115,7 @@ def getInfoTransaction():
     TUP_ID_entry.pack(padx=10)
     TUP_ID_entry.config(state="disabled")  # Disable the entry field
 
+    """"
     # Create and pack the label for NAME
     borrowerlabel = tk.Label(root, text="NAME:")
     borrowerlabel.pack(padx=10, pady=10)
@@ -120,7 +124,7 @@ def getInfoTransaction():
     borrowerentry.insert(tk.END, borrower)  # Insert the actual value
     borrowerentry.pack(padx=10)
     borrowerentry.config(state="disabled")  # Disable the entry field
-
+"""
     # Create and pack the label for YEAR AND SECTION
     yearSection_label = tk.Label(root, text="YEAR AND SECTION:")
     yearSection_label.pack(padx=10, pady=10)
@@ -131,7 +135,7 @@ def getInfoTransaction():
     yearSection_entry.config(state="disabled")  # Disable the entry field
 
     # Create and pack the label for TITLE
-    title_label = tk.Label(root, text="TITLE:")
+    title_label = tk.Label(root, text="BOOK TITLE:")
     title_label.pack(padx=10, pady=10)
     # Create and pack the non-editable entry field for YEAR AND SECTION
     title_entry = tk.Entry(root, state="normal")  # set to editable
