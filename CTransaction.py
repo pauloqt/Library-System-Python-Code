@@ -1,11 +1,16 @@
 import csv
 import random
 from tkinter import messagebox
+
+import tkcalendar as tkcalendar
+from tkcalendar import DateEntry
+
 from CBorrower import borrowerList
 from CBook import bookList
 from CBorrower import loggedInAccount
 import CBorrower
 import CBook
+
 
 transactionList = []       #Initializing an empty list of CTransaction objects          datasruct: list
 
@@ -73,6 +78,8 @@ def addTransaction(transaction):
 """
 
 import tkinter as tk
+import tkcalendar as tkcalendar
+from tkcalendar import DateEntry
 from tkinter import messagebox
 
 def getInfoTransaction():
@@ -131,19 +138,28 @@ def getInfoTransaction():
     title_entry.pack(padx=10)
     title_entry.config(state="disabled")  # Disable the entry field
 
-    # Create and pack the label for DATE BORROWED
+    # Create and pack the label for "DATE BORROWED"
     dateBorrowed_label = tk.Label(root, text="DATE BORROWED:")
     dateBorrowed_label.pack(padx=10, pady=10)
-    # Create and pack the editable entry field for DATE BORROWED
-    dateBorrowed_entry = tk.Entry(root, state="normal")  # set to editable
+
+    # Create the date picker widget and pack it into the root window
+    dateBorrowed_entry = DateEntry(root, state="readonly")
     dateBorrowed_entry.pack(padx=10)
 
-    # Create and pack the label for DATE TO RETURN
-    dateToReturn_label = tk.Label(root, text="DATE BORROWED:")
+
+    # Create and pack the label for "DATE BORROWED"
+    dateToReturn_label = tk.Label(root, text="DATE TO BE RETURN:")
     dateToReturn_label.pack(padx=10, pady=10)
-    # Create and pack the editable entry field for DATE BORROWED
-    dateToReturn_entry = tk.Entry(root, state="normal")  # set to editable
+
+    # Create the date picker widget and pack it into the root window
+    dateToReturn_entry = DateEntry(root, state="readonly")
     dateToReturn_entry.pack(padx=10)
+
+    # Button to get the selected date
+    #get_date_button = tk.Button(root, text="Submit", command=getInfoTransaction)
+    #get_date_button.pack(pady=10)
+
+
 
     def submit():
         # Get values from other entry fields
