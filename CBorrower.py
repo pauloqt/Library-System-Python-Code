@@ -69,7 +69,7 @@ def locateBorrower(TUP_ID):
 
 def displayBorrower():
     for borrower in borrowerList:
-        print(borrower.name +" "+ borrower.TUP_ID +" "+ borrower.yearSection +" " + borrower.contactNum + " " +borrower.email)
+        print(borrower.name +" "+ borrower.TUP_ID +" "+ borrower.yearSection +" " + borrower.contactNum + " " +borrower.email + " " +borrower.noOfBorrowed)
 
 
 def changePass():

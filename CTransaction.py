@@ -1,11 +1,17 @@
 import csv
 import random
 from tkinter import messagebox
+
+import pip
+import tkcalendar as tkcalendar
+from tkcalendar import DateEntry
+
 from CBorrower import borrowerList
 from CBook import bookList
 from CBorrower import loggedInAccount
 import CBorrower
 import CBook
+
 
 transactionList = []       #Initializing an empty list of CTransaction objects          datasruct: list
 
@@ -73,17 +79,31 @@ def addTransaction(transaction):
 """
 
 import tkinter as tk
+import tkcalendar as tkcalendar
+from datetime import date
+from tkcalendar import DateEntry
 from tkinter import messagebox
 
-def getInfoTransaction():   #borrow book
+indexBook = 0
+indexBorrower = 0
+def getInfoTransaction():
+    global indexBook
+    global indexBorrower
+
     root = tk.Tk()
 
     # Create main frame
     main_frame = tk.Frame(root)
     main_frame.pack(padx=10, pady=10)
+    # Set the background color
+    root.configure(bg="LIGHT BLUE")
 
+    borrower = borrowerList[loggedInAccount].name
     # Create labels and entry fields
-    tk.Label(main_frame, text="\t\t\t\tENTER COMPLETE INFORMATION BELOW\t\t\t\t").grid(row=0, columnspan=2)
+    tk.Label(main_frame, text="\t\tTUP READS\t\t").grid(row=0, columnspan=2)
+    tk.Label(main_frame, text="\t\tWELCOME TO TUP READS, {}\t\t".format(borrower)) \
+        .grid(row=1, columnspan=2)
+
 
     ISBN = input("ENTER ISBN: ")
     indexBook = CBook.locateBook(ISBN)                #kinuha index ng book na hihiramin
@@ -104,6 +124,7 @@ def getInfoTransaction():   #borrow book
     TUP_ID_entry.pack(padx=10)
     TUP_ID_entry.config(state="disabled")  # Disable the entry field
 
+    """"
     # Create and pack the label for NAME
     borrowerlabel = tk.Label(root, text="NAME:")
     borrowerlabel.pack(padx=10, pady=10)
@@ -112,7 +133,7 @@ def getInfoTransaction():   #borrow book
     borrowerentry.insert(tk.END, borrower)  # Insert the actual value
     borrowerentry.pack(padx=10)
     borrowerentry.config(state="disabled")  # Disable the entry field
-
+"""
     # Create and pack the label for YEAR AND SECTION
     yearSection_label = tk.Label(root, text="YEAR AND SECTION:")
     yearSection_label.pack(padx=10, pady=10)
@@ -123,7 +144,7 @@ def getInfoTransaction():   #borrow book
     yearSection_entry.config(state="disabled")  # Disable the entry field
 
     # Create and pack the label for TITLE
-    title_label = tk.Label(root, text="TITLE:")
+    title_label = tk.Label(root, text="BOOK TITLE:")
     title_label.pack(padx=10, pady=10)
     # Create and pack the non-editable entry field for YEAR AND SECTION
     title_entry = tk.Entry(root, state="normal")  # set to editable
@@ -131,21 +152,27 @@ def getInfoTransaction():   #borrow book
     title_entry.pack(padx=10)
     title_entry.config(state="disabled")  # Disable the entry field
 
-    # Create and pack the label for DATE BORROWED
+    # Create and pack the label for "DATE BORROWED"
     dateBorrowed_label = tk.Label(root, text="DATE BORROWED:")
     dateBorrowed_label.pack(padx=10, pady=10)
-    # Create and pack the editable entry field for DATE BORROWED
-    dateBorrowed_entry = tk.Entry(root, state="normal")  # set to editable
+    today = date.today()
+    # Create the date picker widget and pack it into the root window
+   # dateBorrowed_entry = DateEntry(root, state="readonly")
+    #today.pack(padx=10)
+    dateBorrowed_entry = DateEntry(root, state="readonly")  # set to read-only
+    dateBorrowed_entry.set_date(today)  # format the date as desired
     dateBorrowed_entry.pack(padx=10)
+    dateBorrowed_entry.config(state="disabled")
 
-    # Create and pack the label for DATE TO RETURN
-    dateToReturn_label = tk.Label(root, text="DATE BORROWED:")
+    # Create and pack the label for "DATE BORROWED"
+    dateToReturn_label = tk.Label(root, text="DATE TO BE RETURN:")
     dateToReturn_label.pack(padx=10, pady=10)
-    # Create and pack the editable entry field for DATE BORROWED
-    dateToReturn_entry = tk.Entry(root, state="normal")  # set to editable
+
+    # Create the date picker widget and pack it into the root window
+    dateToReturn_entry = DateEntry(root, state="readonly")
     dateToReturn_entry.pack(padx=10)
 
-    #if pinindot submit
+
     def submit():
         # Get values from other entry fields
         dateBorrowed = dateBorrowed_entry.get()
@@ -156,9 +183,13 @@ def getInfoTransaction():   #borrow book
         fine = "0"
 
         # ERRORS AND CONFIRMATION ...
+        currentStock = int(bookList[indexBook].totalStocks) - int(bookList[indexBook].noOfBorrower)
+        print(currentStock)
 
         if indexBook < 0:
             messagebox.showerror("BORROW BOOK", "BOOK DOES NOT EXIST")
+        elif currentStock == 0:
+            messagebox.showerror("BORROW BOOK", "BOOK SELECTED IS OUT OF STOCK")
         elif borrowerList[loggedInAccount].noOfBorrowed == 3:
             messagebox.showerror("BORROW BOOK", "YOU CAN ONLY BORROW MAXIMUM OF 3 BOOKS")
         else:
@@ -171,11 +202,16 @@ def getInfoTransaction():   #borrow book
                 transaction = CTransaction(title, ISBN, TUP_ID, dateBorrowed, dateToReturn, status, refNum, borrower, author, librarian, fine)
                 addTransaction(transaction)
                 saveTransaction()
+                bookList[indexBook].noOfBorrower = int(bookList[indexBook].noOfBorrower) + 1       #add noOfBorrower if nanghiram
+                CBook.saveBook()
+                borrowerList[indexBorrower].noOfBorrowed = int(borrowerList[indexBorrower].noOfBorrowed) + 1  # add noOfBorrowed if nanghiram
+                CBorrower.saveBorrower()
                 messagebox.showinfo("BORROW BOOK", "TRANSACTION SUCCESSFULLY SUBMITTED. PROCEED TO THE LIBRARIAN TO APPROVE TRANSACTION")
 
         root.destroy()  # Close the form after submitting
 
-    tk.Button(root, text="Submit", command=submit).pack()
+    submit_button = tk.Button(root, text="Submit", command=submit)
+    submit_button.pack(side="bottom", pady=20)  # Adjust the side and pady values as needed
 
     root.mainloop()
 
@@ -349,4 +385,3 @@ def checkTransactionFields(title, ISBN, TUP_ID, dateBorrowed, dateToReturn, stat
         return False
     else:
         return True
-
