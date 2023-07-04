@@ -79,6 +79,7 @@ def addTransaction(transaction):
 
 import tkinter as tk
 import tkcalendar as tkcalendar
+from datetime import date
 from tkcalendar import DateEntry
 from tkinter import messagebox
 
@@ -141,11 +142,14 @@ def getInfoTransaction():
     # Create and pack the label for "DATE BORROWED"
     dateBorrowed_label = tk.Label(root, text="DATE BORROWED:")
     dateBorrowed_label.pack(padx=10, pady=10)
-
+    today = date.today()
     # Create the date picker widget and pack it into the root window
-    dateBorrowed_entry = DateEntry(root, state="readonly")
+   # dateBorrowed_entry = DateEntry(root, state="readonly")
+    #today.pack(padx=10)
+    dateBorrowed_entry = DateEntry(root, state="readonly")  # set to read-only
+    dateBorrowed_entry.set_date(today)  # format the date as desired
     dateBorrowed_entry.pack(padx=10)
-
+    dateBorrowed_entry.config(state="disabled")
 
     # Create and pack the label for "DATE BORROWED"
     dateToReturn_label = tk.Label(root, text="DATE TO BE RETURN:")
@@ -154,11 +158,6 @@ def getInfoTransaction():
     # Create the date picker widget and pack it into the root window
     dateToReturn_entry = DateEntry(root, state="readonly")
     dateToReturn_entry.pack(padx=10)
-
-    # Button to get the selected date
-    #get_date_button = tk.Button(root, text="Submit", command=getInfoTransaction)
-    #get_date_button.pack(pady=10)
-
 
 
     def submit():
