@@ -34,49 +34,6 @@ class CTransaction:
     #lahat ng mga naka-indent dito ay kasama sa CTransaction Class
 
 #######################  METHODS   ##############################################
-""""
-def getInfoTransaction():
-    print("ENTER COMPLETE INFORMATION BELOW")
-    loggedInAccount= CBorrower.loggedInAccount      #Stores the index of loggedInAccount
-
-    TUP_ID = borrowerList[loggedInAccount].TUP_ID
-    borrower = borrowerList[loggedInAccount].name
-    ISBN = input("ENTER ISBN OF THE BOOK: ")
-    index = CBook.locateBook(ISBN)
-    title = bookList[index].title
-    author = bookList[index].author
-    dateBorrowed = input("ENTER DATE BORROWED: ")
-    dateToReturn = input("ENTER DATE TO RETURN: ")
-    librarian = "MS. LAICA YGOT"
-    fine = "0"
-    refNum = "0000"
-    status = "TO APPROVE"
-
-    if index < 0:
-        messagebox.showerror("BORROW BOOK", "BOOK DOES NOT EXIST")
-    elif borrowerList[loggedInAccount].noOfBorrowed == 3:
-        messagebox.showerror("BORROW BOOK", "YOU CAN ONLY BORROW MAXIMUM OF 3 BOOKS")
-    else:
-        response = messagebox.askyesno(    #creates a yes or no message box
-            title="Confirmation",
-            message="DO YOU WANT TO PROCEED BORROWING?",
-            icon=messagebox.QUESTION
-        )
-        if response:                        #if yes
-            transaction = CTransaction(title, ISBN, TUP_ID, dateBorrowed, dateToReturn, status, refNum, borrower, author, librarian, fine)
-            addTransaction(transaction)
-           # saveTransaction()
-            messagebox.showinfo("BORROW BOOK", "TRANSACTION SUCCESSFULLY SUBMITTED. PROCEED TO THE LIBRARIAN TO APPROVE TRANSACTION")
-
-def addTransaction(transaction):
-    #Add each transaction at the beginning of the list
-    index = 0
-
-    # Insert the transaction at the determined index
-    transactionList.insert(index, transaction)
-    #Note: Pakitawag ang savetransaction() after mag-add ng transaction sa main.
-
-"""
 
 indexBook = 0
 indexBorrower = 0
@@ -91,22 +48,21 @@ def getInfoTransaction():
     main_frame.pack(padx=10, pady=10)
     # Set the background color
 
-    borrower = borrowerList[loggedInAccount].name
-    # Create labels and entry fields
-    tk.Label(main_frame, text="\t\tTUP READS\t\t").grid(row=0, columnspan=2)
-    tk.Label(main_frame, text="\t\tWELCOME TO TUP READS, {}\t\t".format(borrower)) \
-        .grid(row=1, columnspan=2)
-
-
     ISBN = input("ENTER ISBN: ")
     indexBook = CBook.locateBook(ISBN)                #kinuha index ng book na hihiramin
     title = bookList[indexBook].title
     author = bookList[indexBook].author
 
     indexBorrower = CBorrower.loggedInAccount        #kinuha index ng currently account logged in.
-    TUP_ID = borrowerList[loggedInAccount].TUP_ID
-    borrower = borrowerList[loggedInAccount].name
-    yearSection = borrowerList[loggedInAccount].yearSection
+    TUP_ID = borrowerList[indexBorrower].TUP_ID
+    borrower = borrowerList[indexBorrower].name
+    yearSection = borrowerList[indexBorrower].yearSection
+
+    borrower = borrowerList[indexBorrower].name
+    # Create labels and entry fields
+    tk.Label(main_frame, text="\t\tTUP READS\t\t").grid(row=0, columnspan=2)
+    tk.Label(main_frame, text="\t\tWELCOME TO TUP READS, {}\t\t".format(borrower)) \
+        .grid(row=1, columnspan=2)
 
     # Create and pack the label for TUP ID
     TUP_ID_label = tk.Label(root, text="TUP ID:")
@@ -166,19 +122,20 @@ def getInfoTransaction():
 
         # ERRORS AND CONFIRMATION ...
         currentStock = int(bookList[indexBook].totalStocks) - int(bookList[indexBook].noOfBorrower)
-        remainingDays = str(calculateRemainingDays(dateToReturn))
+        remainingDays = calculateRemainingDays(dateToReturn)
 
         if indexBook < 0:
             messagebox.showerror("BORROW BOOK", "BOOK DOES NOT EXIST")
+        #INSERT IF WALANG SELECTED ROW
         elif currentStock < 1:
             messagebox.showerror("BORROW BOOK", "BOOK SELECTED IS OUT OF STOCK")
-        elif borrowerList[loggedInAccount].noOfBorrowed == 3:
+        elif int(borrowerList[indexBorrower].noOfBorrowed) >= 3:
             messagebox.showerror("BORROW BOOK", "YOU CAN ONLY BORROW MAXIMUM OF 3 BOOKS")
         elif remainingDays >7:
             messagebox.showerror("BORROW BOOK", "RETURN DATE MUST BE WITHIN 7 DAYS FROM THE DATE BORROWED")
         else:
             response = messagebox.askyesno(
-                title="Confirmation",
+                title="BORROW BOOK",
                 message="DO YOU WANT TO PROCEED BORROWING?",
                 icon=messagebox.QUESTION
             )
@@ -193,9 +150,13 @@ def getInfoTransaction():
                 #INSERT SUMMARY OF TRANSACTION
                 messagebox.showinfo("BORROW BOOK", "TRANSACTION SUCCESSFULLY SUBMITTED. PROCEED TO THE LIBRARIAN TO APPROVE TRANSACTION")
                 root.destroy()  # Close the form after submitting
+    def cancel():
+        root.destroy()  # Close the form
 
     submit_button = tk.Button(root, text="Submit", command=submit)
-    submit_button.pack(side="bottom", pady=20)  # Adjust the side and pady values as needed
+    submit_button.pack(padx=20, pady=10)  # Adjust the side and pady values as needed
+    cancel_button = tk.Button(root, text="Cancel", command=cancel)
+    cancel_button.pack(padx=40, pady=10)  # Adjust the side and pady values as needed
 
     root.mainloop()
 
@@ -210,7 +171,7 @@ def addTransaction(transaction):
     #Add each transaction at the beginning of the list
     index = 0
 
-    # Insert the transaction at the determined index
+    # Insert the transaction at the index 0
     transactionList.insert(index, transaction)
     #Note: Pakitawag ang savetransaction() after mag-add ng transaction sa main.
 

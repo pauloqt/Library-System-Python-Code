@@ -6,7 +6,7 @@ loggedInAccount = 0     #once na nakapag-log in, di na magpapa-enter uli ng TUP_
 
 class CBorrower:
     # Object Constructor
-    def __init__(self, name, TUP_ID, password, yearSection, contactNum, email, noOfBorrowed, borrowedBook = []) :
+    def __init__(self, name, TUP_ID, password, yearSection, contactNum, email, noOfBorrowed):
         self.name = name
         self.TUP_ID = TUP_ID
         self.password = password
@@ -14,7 +14,6 @@ class CBorrower:
         self.contactNum = contactNum
         self.email = email
         self.noOfBorrowed = noOfBorrowed
-        self.borrowedBook = []
 
     #lahat ng mga naka-indent dito ay kasama sa Cborrower Class
 
@@ -40,7 +39,7 @@ def getInfoBorrower():
         messagebox.showerror("REGISTRATION", "PASSWORD DIDN'T MATCH")
     else:
         response = messagebox.askyesno(    #creates a yes or no message box
-            title="Confirmation",
+            title="REGISTRATION",
             message="DO YOU WANT TO SUBMIT YOUR REGISTRATION?",
             icon=messagebox.QUESTION
 
@@ -69,46 +68,43 @@ def locateBorrower(TUP_ID):
 
 def displayBorrower():
     for borrower in borrowerList:
-        print(borrower.name +" "+ borrower.TUP_ID +" "+ borrower.yearSection +" " + borrower.contactNum + " " +borrower.email + " " +borrower.noOfBorrowed)
+        print(borrower.name +" "+ borrower.TUP_ID +" "+ borrower.yearSection +" " + borrower.contactNum + " " +borrower.email + " " +str(borrower.noOfBorrowed))
 
-
+changePassTries = 3
 def changePass():
-        tries = 3
-        exit = False
+        global changePassTries
 
-        while tries > 0 and exit == False:
-            #TUP_ID = input("Enter your TUP ID:")
-            currentPass = input("Enter current password: ")
-            newPass = input("Enter new password: ")
-            reEnterPass = input("Re-enter new password: ")
+        #TUP_ID = input("Enter your TUP ID:")
+        currentPass = input("Enter current password: ")
+        newPass = input("Enter new password: ")
+        reEnterPass = input("Re-enter new password: ")
 
-            index = loggedInAccount
+        index = loggedInAccount
 
-            if index < 0:
-                messagebox.showerror("CHANGE PASSWORD", "ACCOUNT NOT FOUND")
-            elif currentPass != borrowerList[index].password:
-                messagebox.showerror("CHANGE PASSWORD", "INCORRECT CURRENT PASSWORD")
-                tries-=1
-            elif newPass != reEnterPass:
-                messagebox.showerror("CHANGE PASSWORD", "NEW PASSWORD DOESN'T MATCH THE RE-ENTERED PASSWORD!")
-            elif currentPass == newPass:
-                messagebox.showerror("CHANGE PASSWORD", "YOU CAN'T CHANGE IT TO YOUR CURRENT PASSWORD")
-            else:
-                response = messagebox.askyesno(  # creates a yes or no message box
-                    title="Confirmation",
-                    message="CONFIRM CHANGES?",
-                    icon=messagebox.QUESTION
-                )
-                if response:
-                    borrowerList[index].password = newPass      #set password to new pass
-                    saveBorrower()
-                    messagebox.showinfo("CHANGE PASSWORD", "YOUR PASSWORD HAS BEEN SUCCESSFULLY CHANGED!")
-                    exit = True
+        if index < 0:
+            messagebox.showerror("CHANGE PASSWORD", "ACCOUNT NOT FOUND")
+        elif currentPass != borrowerList[index].password:
+            messagebox.showerror("CHANGE PASSWORD", "INCORRECT CURRENT PASSWORD")
+            changePassTries -= 1
+        elif newPass != reEnterPass:
+            messagebox.showerror("CHANGE PASSWORD", "NEW PASSWORD DOESN'T MATCH THE RE-ENTERED PASSWORD!")
+        elif currentPass == newPass:
+            messagebox.showerror("CHANGE PASSWORD", "YOU CAN'T CHANGE IT TO YOUR CURRENT PASSWORD")
+        else:
+            response = messagebox.askyesno(  # creates a yes or no message box
+                title="CHANGE PASSWORD",
+                message="CONFIRM CHANGES?",
+                icon=messagebox.QUESTION
+            )
+            if response:
+                borrowerList[index].password = newPass      #set password to new pass
+                saveBorrower()
+                messagebox.showinfo("CHANGE PASSWORD", "YOUR PASSWORD HAS BEEN SUCCESSFULLY CHANGED!")
+                #CLEAR FIELDS
 
-            if tries == 0:
-                print("YOU HAVE EXCEEDED THE MAXIMUM NUMBER OF TRIES.")
-                isBlocked = True
-                return
+        if changePassTries == 0:
+            messagebox.showerror("CHANGE PASSWORD", "YOU HAVE EXCEEDED THE MAXIMUM NUMBER OF TRIES. TRY AGAIN LATER")
+            #EXIT FRAME
 
 def updateBorrower():
     #TUP_ID = input("ENTER TUP ID: ")
@@ -277,11 +273,11 @@ def retrieveBorrower():
             contactNum = row[4]
             email = row[5]
             noOfBorrowed = row [6]
-            #borrowedborrowers [0] = row[6]
 
             #create an object of the retrieved borrower
             #DECRYPTYED
-            borrower = CBorrower(decrypt(name), decrypt(TUP_ID), decrypt(password), decrypt(yearSection), decrypt(contactNum), decrypt(email), decrypt(noOfBorrowed))# borrowedBook
+            borrower = CBorrower(decrypt(name), decrypt(TUP_ID), decrypt(password), decrypt(yearSection), decrypt(contactNum), decrypt(email), decrypt(noOfBorrowed))
+
             #NOT DECRYPTED
             #borrower = CBorrower(name, TUP_ID, password, yearSection, contactNum, email, noOfBorrowed)# borrowedBook
 

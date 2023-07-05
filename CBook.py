@@ -39,13 +39,16 @@ def getInfoBook():
         messagebox.showerror("ADD BOOK", "THE BOOK ALREADY EXISTS IN THE RECORD")
     else:
         response = messagebox.askyesno(    #creates a yes or no message box
-            title="Confirmation",
+            title="ADD BOOK",
             message="ARE YOU SURE TO ADD THIS BOOK IN THE RECORD?",
             icon=messagebox.QUESTION
         )
         if response:                        #if yes
             book = CBook(title, author, ISBN, edition, yearPublished, material, category, shelfNo, totalStocks, noOfBorrower)
             addBook(book)
+            messagebox.showinfo("ADD BOOK", "BOOK ADDED SUCCESSFULLY")
+            #display table
+            #clear fields
 
 def addBook(book):
     # Find the index to insert the book alphabetically based on the title
@@ -61,12 +64,19 @@ def displayBooks():
         currentStock = str(int(book.totalStocks) - int(book.noOfBorrower))
         print(book.title +" "+ book.author +" "+ book.ISBN +" "+ book.edition +" "+ book.yearPublished +" "+ book.material +" "+ book.category +" "+ str(book.shelfNo) +" "+ str(book.totalStocks) +" "+ str(book.noOfBorrower) +" "+ currentStock)
 
-
+''' UPDATE BOOK IF WALA SA GUI
 def updateBook():
     ISBN = input("ENTER THE ISBN OF THE BOOK: ")
     index = locateBook(ISBN)
 
-    if index >= 0:  # if existing ang book
+    if index <0:
+        messagebox.showerror("UPDATE BOOK", "THE ISBN DOES NOT FOUND A MATCH")
+    elif checkBookFields(bookList[index].title, bookList[index].author, bookList[index].ISBN, bookList[index].edition,
+                         bookList[index].yearPublished, bookList[index].material, bookList[index].category,
+                         bookList[index].totalStocks, bookList[index].noOfBorrower):
+        messagebox.showerror("UPDATE BOOK", "PLEASE FILL IN ALL FIELDS")
+
+    else:
         print("[1] TITLE\n[2] AUTHOR\n[3] ISBN\n[4] EDITION\n[5] YEAR PUBLISHED\n[6] MATERIAL\n[7] CATEGORY\n[8] SHELF NO.\n[9] TOTAL NO. OF STOCK\n[10] TOTAL NO. OF BORROWER")
         attributeChoice = int(input("ENTER ATTRIBUTE TO UPDATE: "))
 
@@ -99,25 +109,76 @@ def updateBook():
         elif attributeChoice == 10:
             bookList[index].noOfBorrower = updatedInfoInt
 
+        messagebox.showinfo("UPDATE BOOK", "BOOK UPDATED SUCCESSFULLY! ")
         saveBook()
+'''
 
+#UPDATE BOOK IF NASA GUI
+def updateBook():
+    title = input("Enter title: ")
+    author = input("Enter author: ")
+    ISBN = input("Enter ISBN: ")
+    edition = input("Enter edition: ")
+    yearPublished = input("Enter year published: ")
+    material = input("Enter material: ")
+    category = input("Enter category: ")
+    shelfNo = int(input("Enter shelf no.: "))
+    totalStocks = int(input("Enter total number of stocks: "))
+    noOfBorrower = int(input("Enter total number of borrowers: "))
+
+#IF PININDOT UPDATE BOOK:
+    index = locateBook(ISBN)
+
+    if index <0:
+        messagebox.showerror("UPDATE BOOK", "THE ISBN DOES NOT FOUND A MATCH")
+    elif not checkBookFields(title, author, ISBN, edition, yearPublished, material, category, shelfNo, totalStocks):
+        messagebox.showerror("UPDATE BOOK", "PLEASE FILL IN ALL FIELDS")
     else:
-        print("BOOK NOT FOUND!")
+        response = messagebox.askyesno(  # creates a yes or no message box
+            title="UPDATE BOOK",
+            message="ARE YOU SURE TO UPDATE THIS BOOK IN THE RECORD?",
+            icon=messagebox.QUESTION
+        )
+        if response:  # if yes, salin new info
+            bookList[index].title = title
+            bookList[index].author = author
+            bookList[index].ISBN = ISBN
+            bookList[index].edition = edition
+            bookList[index].yearPublished = yearPublished
+            bookList[index].material = material
+            bookList[index].category = category
+            bookList[index].shelfNo = shelfNo
+            bookList[index].totalStocks = totalStocks
+            bookList[index].noOfBorrower = noOfBorrower
+
+            messagebox.showinfo("UPDATE BOOK", "BOOK UPDATED SUCCESSFULLY! ")
+            saveBook()
+            #display Table
+            #clear fields
 
 def deleteBook():
     ISBN = input("Enter the ISBN of the book you want to delete: ")
+
+#IF PININDOT DELETE BOOK:
     index = locateBook(ISBN)
-    if index >= 0:
-        #ASK CONFIRMATION
-        choice = input("Are you sure to delete the information? (Y/N): ")
-        if choice.upper() == "Y":
-            deleted_book = bookList.pop(index)
-            print(deleted_book.title + " is deleted successfully!")
-            saveBook()
-        else:
-            print("Book deletion canceled.")
+    if index <0:
+        messagebox.showerror("DELETE  BOOK", "THE ISBN DOES NOT FOUND A MATCH")
+    #INSERT IF WALANG SINELECT NA ROW
+
     else:
-        print("Book not found!")
+        response = messagebox.askyesno(  # creates a yes or no message box
+            title="DELETE BOOK",
+            message="ARE YOU SURE TO DELETE THIS BOOK IN THE RECORD?",
+            icon=messagebox.QUESTION
+        )
+
+        if response:
+            deleted_book = bookList.pop(index)
+            messagebox.showinfo("DELETE BOOK", "BOOK DELETED SUCCESSFULLY! ")
+            saveBook()
+            #display Table
+            #clear fields
+
 
 def searchBook():
     print("Select an attribute for searching")
@@ -148,7 +209,7 @@ def searchBook():
 
         if keyword.lower() in attributeValue.lower():
             currentStock = str(int(book.totalStocks) - int(book.noOfBorrower))
-            print(book.title +" "+ book.author +" "+ book.ISBN +" "+ book.edition +" "+ book.yearPublished +" "+ book.material +" "+ book.category +" "+ str(book.shelfNo) +" "+ str(book.totalStocks) +" "+ str(book.noOfBorrower) +" "+ book.currentStock)
+            print(book.title +" "+ book.author +" "+ book.ISBN +" "+ book.edition +" "+ book.yearPublished +" "+ book.material +" "+ book.category +" "+ str(book.shelfNo) +" "+ str(book.totalStocks) +" "+ str(book.noOfBorrower) +" "+ currentStock)
             foundMatch = True
 
     if not foundMatch:
@@ -195,8 +256,7 @@ def retrieveBook():
             noOfBorrower = row[9]
 
             #create an object of the retrieved book
-            book = CBook(title, author, ISBN, edition, yearPublished, material, category, shelfNo, totalStocks,
-                         noOfBorrower)
+            book = CBook(title, author, ISBN, edition, yearPublished, material, category, shelfNo, totalStocks,noOfBorrower)
             #add book in the bookList
             addBook(book)
 
