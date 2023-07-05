@@ -1,3 +1,3 @@
-Name,TUP_ID,Password,Year and Section,Contact Number,Email,No. of Borrowed Books,Borrowed Book(s)
-N,NNNNNN,N,N,N,N,M
+TUP_ID,Password,Year and Section,Contact Number,Email,No. of Borrowed Books
+N,NNNNNN,N,N,N,N,N
 O,OOOOOO,O,O,O,O,P

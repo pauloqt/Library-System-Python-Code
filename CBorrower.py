@@ -70,6 +70,13 @@ def displayBorrower():
     for borrower in borrowerList:
         print(borrower.name +" "+ borrower.TUP_ID +" "+ borrower.yearSection +" " + borrower.contactNum + " " +borrower.email + " " +str(borrower.noOfBorrowed))
 
+'''
+def displayBorrowedBook(TUP_ID):
+    for transaction in transactionList:
+        if transaction.TUP_ID == TUP_ID and transaction.status == "TO RETURN":
+            print(transaction.title+"\n")
+'''
+
 changePassTries = 3
 def changePass():
         global changePassTries
@@ -247,7 +254,7 @@ def saveBorrower():
         writer = csv.writer(csvfile)  # Create a CSV writer object
 
         # Write the header row
-        writer.writerow(["Name", "TUP_ID", "Password", "Year and Section", "Contact Number", "Email","No. of Borrowed Books", "Borrowed Book(s)"])
+        writer.writerow(["TUP_ID", "Password", "Year and Section", "Contact Number", "Email","No. of Borrowed Books"])
 
         # Write each borrower's data row
         for borrower in borrowerList:

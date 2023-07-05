@@ -286,7 +286,7 @@ def saveTransaction():
         writer = csv.writer(csvfile)  # Create a CSV writer object
 
         # Write the header row
-        writer.writerow(["Title", "Author", "ISBN", "Edition", "Year Published", "Material", "Category", "Shelf No.", "Total Stocks", "No. of Borrower"])
+        writer.writerow(["Title", "ISBN", "TUP ID", "dateBorrowed", "dateToReturn", "Status", "Reference No.", "Borrower", "Author", "Librarian", "Fine"])
 
         # Write each transaction's data row
         for transaction in transactionList:
