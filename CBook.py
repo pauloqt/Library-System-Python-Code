@@ -1,6 +1,7 @@
 import csv
 from tkinter import messagebox
 
+
 bookList = []     #Initializing an empty list of CBook objects          datasruct: list
 
 class CBook:
@@ -59,6 +60,7 @@ def addBook(book):
 def displayBooks():
     for book in bookList:
         print(book.title +" "+ book.author +" "+ book.ISBN +" "+ book.edition +" "+ book.yearPublished +" "+ book.material +" "+ book.category +" "+ str(book.shelfNo) +" "+ str(book.totalStocks) +" "+ str(book.noOfBorrower))
+
 
 def updateBook():
     ISBN = input("ENTER THE ISBN OF THE BOOK: ")

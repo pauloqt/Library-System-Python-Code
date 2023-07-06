@@ -38,6 +38,7 @@ def studentPortal():
 
         if choice == "1":
             CBook.displayBooks()
+            CTransaction.recom()
         elif choice == "2":
             pass
             CBook.searchBook()
