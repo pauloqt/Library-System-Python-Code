@@ -69,13 +69,21 @@ def locateBorrower(TUP_ID):
 def displayBorrower():
     for borrower in borrowerList:
         print(borrower.name +" "+ borrower.TUP_ID +" "+ borrower.yearSection +" " + borrower.contactNum + " " +borrower.email + " " +str(borrower.noOfBorrowed))
+        displayBorrowedBook(borrower.TUP_ID)
 
-'''
 def displayBorrowedBook(TUP_ID):
+    from CTransaction import transactionList
+    i=0
+
+    bookBorrowed=["", "", ""]
     for transaction in transactionList:
         if transaction.TUP_ID == TUP_ID and transaction.status == "TO RETURN":
-            print(transaction.title+"\n")
-'''
+            bookBorrowed[i] = transaction.title
+            i=i+1
+
+    print(bookBorrowed[2] + bookBorrowed[1] + bookBorrowed[0])
+
+
 
 changePassTries = 3
 def changePass():
