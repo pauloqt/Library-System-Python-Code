@@ -1,5 +1,9 @@
 Title,Author,ISBN,Edition,Year Published,Material,Category,Shelf No.,Total Stocks,No. of Borrower
-BOOK 1,1,1,1,1,1,1,1,30,14
-BOOK 30,30,30,30,30,30,30,30,30,7
-BOOK 5,5,5,5,5,5,5,5,5,3
-BOOK 7,7,7,7,7,7,7,7,7,7
+To Kill a Mockingbird,Harper Lee,9780061120084,50th Anniversary Edition,1960,Print,Classic Fiction,CF001,5,10
+1984,George Orwell,9780451524935,None,1949,Print,Science Fiction,SF002,3,6
+Book A, Author X, 1234567890123, 1st Edition, 2020, Paperback, Fiction, Shelf 1, 10, 5
+Book B, Author Y, 9876543210123, 2nd Edition, 2018, Hardcover, Mystery, Shelf 2, 5, 3
+Book C, Author Z, 2468135790123, 3rd Edition, 2019, Paperback, Science Fiction, Shelf 3, 8, 2
+Harry Potter and the Sorcerer's Stone,J.K. Rowling,9780590353427,None,1997,Print,Fantasy,FT006,10,20
+The Da Vinci Code,Dan Brown,9780307474278,None,2003,Print,Mystery,MYS010,4,8
+The Lord of the Rings,J.R.R. Tolkien,9780544003415,None,1954,Print,Fantasy,FT009,5,10
