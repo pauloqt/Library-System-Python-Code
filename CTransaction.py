@@ -317,6 +317,88 @@ def retrieveTransaction():
             #add transaction at the end of the transactionList
             transactionList.append(transaction)
 
+def recommendBooks(borrower):
+    borrowed_categories = []
+
+    # Find the categories of the books borrowed by the borrower
+    for transaction in transactionList:
+        if transaction.borrower == borrower.name:
+            book = next((book for book in bookList if book.title == transaction.title), None)
+            if book:
+                borrowed_categories.append(book.category)
+
+    recommendations = []
+
+    # Find three books from the same categories as the borrowed books, excluding the ones already borrowed
+    for book in bookList:
+        if book.category in borrowed_categories and book.title not in recommendations and book.title not in borrower.borrowedBook:
+            recommendations.append(book.title)
+
+        if len(recommendations) == 3:
+            break
+
+    random.shuffle(recommendations)
+    return recommendations
+
+def recom():
+    borrower = borrowerList[loggedInAccount]
+    recommendations = recommendBooks(borrower)
+    print("Recommendations:")
+    for book in recommendations:
+        print(book)
+
+
+
+
+def summary():
+    # Get the count of each book title
+    title_counts = {}
+    for transaction in transactionList:
+        title = transaction.title
+        if title in title_counts:
+            title_counts[title] += 1
+        else:
+            title_counts[title] = 1
+
+    # Get the most borrowed book title
+    most_borrowed_title = max(title_counts, key=title_counts.get)
+
+    # Get the count of books in each genre/category and the number of unique borrowers
+    genre_counts = {}
+    genre_borrowers = {}
+    for transaction in transactionList:
+        title = transaction.title
+        genre = next((book.category for book in bookList if book.title == title), None)
+        if genre:
+            if genre in genre_counts:
+                genre_counts[genre] += 1
+                if transaction.TUP_ID not in genre_borrowers[genre]:
+                    genre_borrowers[genre].append(transaction.TUP_ID)
+            else:
+                genre_counts[genre] = 1
+                genre_borrowers[genre] = [transaction.TUP_ID]
+
+    # Get the most borrowed book genre
+    most_borrowed_genre = max(genre_counts, key=genre_counts.get)
+
+    # Get the author of the most borrowed book
+    most_borrowed_author = ""
+    max_books_count = 0
+    max_borrowers_count = 0
+    for book in bookList:
+        if transaction.title == most_borrowed_title:
+            author = book.author
+            books_count = title_counts.get(most_borrowed_title, 0)
+            borrowers_count = len(genre_borrowers.get(most_borrowed_genre, []))
+            if books_count > max_books_count or (books_count == max_books_count and borrowers_count > max_borrowers_count):
+                most_borrowed_author = author
+                max_books_count = books_count
+                max_borrowers_count = borrowers_count
+
+    print("Most Borrowed Book Title: ", most_borrowed_title)
+    print("Most Borrowed Book Genre: ", most_borrowed_genre)
+    print("Most Borrowed Book Author: ", most_borrowed_author)
+
 def generateReferenceNumber():
     reference_number = random.randint(100000, 999999)
     return str(reference_number)
